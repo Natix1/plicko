@@ -1,0 +1,19 @@
+{
+  "name": "plicko-vencord",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cd Vencord && pnpm build --watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "packageManager": "pnpm@10.27.0",
+  "devDependencies": {
+    "electron": "^41.0.2",
+    "typescript": "^5.9.3"
+  }
+}

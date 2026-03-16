@@ -1,0 +1,3 @@
+setup:
+    go mod tidy
+    mkdir -p uploads

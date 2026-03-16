@@ -1,0 +1,25 @@
+services:
+  app-traefik:
+    build: .
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.plicko.rule=Host(`${PLICKO_ENDPOINT_URL}`)"
+      - "traefik.http.routers.plicko.entrypoints=websecure"
+      - "traefik.http.routers.plicko.tls=true"
+      - "traefik.http.routers.plicko.tls.certresolver=le"
+      - "traefik.http.routers.plicko.service=plicko"
+      - "traefik.http.services.plicko.loadbalancer.server.port=8080"
+    networks:
+      - proxy
+    env_file:
+      - .env
+      - stack.env
+    volumes:
+      - uploads:/uploads
+
+networks:
+  proxy:
+    external: true
+
+volumes:
+  uploads:

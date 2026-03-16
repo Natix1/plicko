@@ -1,0 +1,10 @@
+{
+  "extends": "./Vencord/tsconfig.json",
+  "compilerOptions": {
+    "baseUrl": "./Vencord/src"
+  },
+  "include": [
+    "src/**/*",
+    "Vencord/src/globals.d.ts"
+  ]
+}

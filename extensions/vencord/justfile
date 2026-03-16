@@ -1,0 +1,17 @@
+setup:
+	if [ ! -d "Vencord" ]; then \
+		echo "Cloning Vencord..."; \
+		git clone https://github.com/Vendicated/Vencord; \
+	fi
+	mkdir -p Vencord/src/userplugins/
+	cd Vencord && pnpm install
+	if [ ! -L "Vencord/src/userplugins/PlickoVencord" ]; then \
+		ln -s $(pwd)/src Vencord/src/userplugins/PlickoVencord; \
+	fi
+	pnpm install
+
+inject:
+    cd Vencord && pnpm inject
+
+dev:
+    cd Vencord && pnpm build --watch
