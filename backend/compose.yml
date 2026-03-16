@@ -15,7 +15,7 @@ services:
       - path: .env
         required: false
 
-      - path: stack.env
+      - path: ../stack.env
         required: false
     volumes:
       - uploads:/uploads
