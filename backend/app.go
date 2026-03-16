@@ -41,16 +41,19 @@ func init() {
 	BIND_ADDR = getEnvSafe("BIND_ADDR")
 
 	UPLOADS_DIRECTORY = getEnvDefault("UPLOADS_DIRECTORY", "/uploads")
-	fmt.Println("Uploads directory: ", UPLOADS_DIRECTORY)
+
+	Logger.Info("Init function ran", "uploads directory", UPLOADS_DIRECTORY)
 }
 
 func main() {
 	// public
 	http.HandleFunc("GET /uploads/{file}", ReadHandler)
+	http.HandleFunc("GET /assets/{file}", AssetsHandler)
 
 	// private
 	http.HandleFunc("POST /uploads", Auth(WriteHandler))
 	http.HandleFunc("GET /metadata/storage-total", Auth(StorageTakenHandler))
 
+	Logger.Info("Serving...")
 	http.ListenAndServe(BIND_ADDR, nil)
 }

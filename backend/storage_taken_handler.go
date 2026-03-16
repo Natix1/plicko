@@ -31,7 +31,7 @@ func StorageTakenHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	w.Write(ToJSON(StorageTakenResponse{
+	JSONServerSuccess(w, StorageTakenResponse{
 		Bytes: size,
-	}))
+	})
 }

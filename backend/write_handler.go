@@ -11,7 +11,8 @@ import (
 )
 
 type WriteResponse struct {
-	Urls []string `json:"urls"`
+	Urls                []string `json:"urls"`
+	NewStorageSizeBytes int64    `json:"new_storage_size_bytes"`
 }
 
 func generateRandomString() string {
@@ -54,5 +55,10 @@ func WriteHandler(w http.ResponseWriter, r *http.Request) {
 		urls = append(urls, fmt.Sprintf("https://%s/uploads/%s", PLICKO_ENDPOINT_URL, id))
 	}
 
-	w.Write(ToJSON(WriteResponse{Urls: urls}))
+	size, err := DirSize(UPLOADS_DIRECTORY)
+	if err != nil {
+		size = -1
+	}
+
+	JSONServerSuccess(w, WriteResponse{Urls: urls, NewStorageSizeBytes: size})
 }
