@@ -41,6 +41,7 @@ func init() {
 	BIND_ADDR = getEnvSafe("BIND_ADDR")
 
 	UPLOADS_DIRECTORY = getEnvDefault("UPLOADS_DIRECTORY", "/uploads")
+	fmt.Println("Uploads directory: ", UPLOADS_DIRECTORY)
 }
 
 func main() {
