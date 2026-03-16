@@ -23,7 +23,7 @@ func generateRandomString() string {
 func WriteHandler(w http.ResponseWriter, r *http.Request) {
 	r.Body = http.MaxBytesReader(w, r.Body, 500<<20)
 	if err := r.ParseMultipartForm(500 << 20); err != nil {
-		HTTPError(w, http.StatusBadRequest, "failed to parse form")
+		HTTPError(w, http.StatusBadRequest, "failed to parse form: "+err.Error())
 		return
 	}
 
