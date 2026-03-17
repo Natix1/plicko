@@ -47,12 +47,12 @@ func init() {
 
 func main() {
 	// public
-	http.HandleFunc("GET /artifacts/{file}", ReadHandler)
+	http.HandleFunc("GET /v1/artifacts/{file}", ReadHandler)
 	http.HandleFunc("GET /assets/{file}", AssetsHandler)
 
 	// private
-	http.HandleFunc("POST /uploads", Auth(WriteHandler))
-	http.HandleFunc("GET /metadata/storage-total", Auth(StorageTakenHandler))
+	http.HandleFunc("POST /v1/uploads", Auth(WriteHandler))
+	http.HandleFunc("GET /v1/metadata/storage-total", Auth(StorageTakenHandler))
 
 	Logger.Info("Serving...")
 	http.ListenAndServe(BIND_ADDR, nil)
