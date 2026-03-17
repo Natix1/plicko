@@ -1,18 +1,22 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"os"
 
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
 )
 
 var (
-	PLICKO_ENDPOINT_URL string = ""
-	PLICKO_KEY          string = ""
-	BIND_ADDR           string = ""
-	UPLOADS_DIRECTORY   string = ""
+	PLICKO_ENDPOINT_URL        string        = ""
+	PLICKO_KEY                 string        = ""
+	BIND_ADDR                  string        = ""
+	ARTIFACTS_DIRECTORY        string        = ""
+	POSTGRES_CONNECTION_STRING string        = ""
+	POSTGRES                   *pgxpool.Pool = nil
 )
 
 func getEnvSafe(name string) string {
@@ -39,20 +43,33 @@ func init() {
 	PLICKO_ENDPOINT_URL = getEnvSafe("PLICKO_ENDPOINT_URL")
 	PLICKO_KEY = getEnvSafe("PLICKO_KEY")
 	BIND_ADDR = getEnvSafe("BIND_ADDR")
+	POSTGRES_CONNECTION_STRING = getEnvSafe("POSTGRES_CONNECTION_STRING")
 
-	UPLOADS_DIRECTORY = getEnvDefault("UPLOADS_DIRECTORY", "/uploads")
+	ARTIFACTS_DIRECTORY = getEnvDefault("ARTIFACTS_DIRECTORY", "/artifacts")
+	err := RunMigrations(POSTGRES_CONNECTION_STRING)
+	if err != nil {
+		panic("Failed running database migrations: " + err.Error())
+	}
 
-	Logger.Info("Init function ran", "uploads directory", UPLOADS_DIRECTORY)
+	conn, err := pgxpool.New(context.Background(), POSTGRES_CONNECTION_STRING)
+	if err != nil {
+		panic("Failed connecting to postgres: " + err.Error())
+	}
+	POSTGRES = conn
+
+	Logger.Info("Init function ran", "artifacts directory", ARTIFACTS_DIRECTORY)
 }
 
 func main() {
+	defer POSTGRES.Close()
+
 	// public
-	http.HandleFunc("GET /uploads/{file}", ReadHandler)
+	http.HandleFunc("GET /v1/artifacts/{id}", ReadHandler)
 	http.HandleFunc("GET /assets/{file}", AssetsHandler)
 
 	// private
-	http.HandleFunc("POST /uploads", Auth(WriteHandler))
-	http.HandleFunc("GET /metadata/storage-total", Auth(StorageTakenHandler))
+	http.HandleFunc("POST /v1/uploads", Auth(WriteHandler))
+	http.HandleFunc("GET /v1/metadata/storage-total", Auth(StorageTakenHandler))
 
 	Logger.Info("Serving...")
 	http.ListenAndServe(BIND_ADDR, nil)

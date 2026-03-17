@@ -10,7 +10,7 @@ func Auth(handler http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		authHeader := r.Header.Get("x-plicko-key")
 		if authHeader != PLICKO_KEY {
-			HTTPError(w, http.StatusUnauthorized, "Invalid plicko key")
+			HTTPError(w, http.StatusUnauthorized, "Invalid plicko key", nil)
 			return
 		}
 
@@ -41,8 +41,8 @@ func ToJSON[T any](value T) json.RawMessage {
 	return encoded
 }
 
-func HTTPError(w http.ResponseWriter, statusCode int, message string) {
-	Logger.Debug("HTTPError called", "Status code", statusCode, "message", message)
+func HTTPError(w http.ResponseWriter, statusCode int, message string, err error) {
+	Logger.Debug("HTTPError called", "Status code", statusCode, "message", message, "error", err.Error())
 	w.Header().Set("Content-Type", "application/json")
 	w.WriteHeader(statusCode)
 	w.Write(JSONServerError(message))

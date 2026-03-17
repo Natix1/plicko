@@ -13,5 +13,8 @@ setup:
 inject:
     cd Vencord && pnpm inject
 
+build:
+    cd Vencord && pnpm build --release
+
 dev:
     cd Vencord && pnpm build --watch
