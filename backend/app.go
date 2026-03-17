@@ -12,7 +12,7 @@ var (
 	PLICKO_ENDPOINT_URL string = ""
 	PLICKO_KEY          string = ""
 	BIND_ADDR           string = ""
-	UPLOADS_DIRECTORY   string = ""
+	ARTIFACTS_DIRECTORY string = ""
 )
 
 func getEnvSafe(name string) string {
@@ -40,9 +40,9 @@ func init() {
 	PLICKO_KEY = getEnvSafe("PLICKO_KEY")
 	BIND_ADDR = getEnvSafe("BIND_ADDR")
 
-	UPLOADS_DIRECTORY = getEnvDefault("UPLOADS_DIRECTORY", "/uploads")
+	ARTIFACTS_DIRECTORY = getEnvDefault("ARTIFACTS_DIRECTORY", "/artifacts")
 
-	Logger.Info("Init function ran", "uploads directory", UPLOADS_DIRECTORY)
+	Logger.Info("Init function ran", "artifacts directory", ARTIFACTS_DIRECTORY)
 }
 
 func main() {

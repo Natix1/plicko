@@ -44,7 +44,7 @@ func WriteHandler(w http.ResponseWriter, r *http.Request) {
 		defer file.Close()
 
 		id := generateRandomString() + filepath.Ext(fileHeader.Filename)
-		dst, err := os.Create(filepath.Clean(UPLOADS_DIRECTORY) + string(os.PathSeparator) + id)
+		dst, err := os.Create(filepath.Clean(ARTIFACTS_DIRECTORY) + string(os.PathSeparator) + id)
 		if err != nil {
 			HTTPError(w, http.StatusInternalServerError, "failed to save file")
 			return
@@ -55,7 +55,7 @@ func WriteHandler(w http.ResponseWriter, r *http.Request) {
 		urls = append(urls, fmt.Sprintf("https://%s/uploads/%s", PLICKO_ENDPOINT_URL, id))
 	}
 
-	size, err := DirSize(UPLOADS_DIRECTORY)
+	size, err := DirSize(ARTIFACTS_DIRECTORY)
 	if err != nil {
 		size = -1
 	}

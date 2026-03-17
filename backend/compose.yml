@@ -18,11 +18,11 @@ services:
       - path: ../stack.env
         required: false
     volumes:
-      - uploads:/uploads
+      - artifacts:/artifacts
 
 networks:
   proxy:
     external: true
 
 volumes:
-  uploads:
+  artifacts:

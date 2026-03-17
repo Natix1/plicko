@@ -25,7 +25,7 @@ func DirSize(path string) (int64, error) {
 }
 
 func StorageTakenHandler(w http.ResponseWriter, r *http.Request) {
-	size, err := DirSize(UPLOADS_DIRECTORY)
+	size, err := DirSize(ARTIFACTS_DIRECTORY)
 	if err != nil {
 		HTTPError(w, http.StatusInternalServerError, "Failed getting directory size")
 		return
