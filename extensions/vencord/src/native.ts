@@ -4,13 +4,18 @@ import * as fs from "fs";
 import FormData from "form-data";
 import axios from "axios";
 
-export async function uploadFile(_, endpoint: string, plickoKey: string): Promise<{ urls: string[], new_storage_size_bytes: number }> {
+interface Entry {
+  url: string
+  filename: string
+}
+
+export async function uploadFile(_, endpoint: string, plickoKey: string): Promise<{ entries: Entry[], new_storage_size_bytes: number }> {
   const result = await dialog.showOpenDialog({
     properties: ["openFile", "multiSelections"],
     filters: [{ name: "All Files", extensions: ["*"] }]
   });
 
-  if (result.canceled) return { urls: [], new_storage_size_bytes: -1 };
+  if (result.canceled) return { entries: [], new_storage_size_bytes: -1 };
   if (result.filePaths.length > 5) throw new Error("I don't think you want to upload that many files");
 
   const formData = new FormData();
@@ -25,7 +30,18 @@ export async function uploadFile(_, endpoint: string, plickoKey: string): Promis
     }
   });
 
-  return response.data;
+  const urls: string[] = response.data.urls;
+
+  return {
+    new_storage_size_bytes: response.data.new_storage_size_bytes,
+    entries: urls.map((url, index) => {
+      const filePath = result.filePaths[index] || "(attachment)";
+      return {
+        url: url,
+        filename: path.basename(filePath)
+      } as Entry
+    })
+  };
 }
 
 export async function getStorageSize(endpoint: string, plickoKey: string): Promise<number> {

@@ -32,7 +32,7 @@ function humanBytes(bytes: number): string {
   return `${(bytes / 1024 ** 3).toFixed(1)} GB`;
 }
 
-function displayUri(uri: string): string {
+function displayUri(uri: string, fileName: string): string {
   if (uri.endsWith(".png") ||
     uri.endsWith(".jpg") ||
     uri.endsWith(".jpeg") ||
@@ -44,7 +44,7 @@ function displayUri(uri: string): string {
     uri.endsWith(".mov")) {
     return uri
   } else {
-    return ` [Attachment](${uri})`
+    return ` [${fileName}](${uri})`
   }
 }
 
@@ -61,19 +61,19 @@ export default definePlugin({
         action={async () => {
           try {
             const data = await Native.uploadFile(settings.store.endpoint, settings.store.plickoKey);
-            const urls = data.urls;
             const new_size_bytes = data.new_storage_size_bytes;
 
-            if (urls.length == 0) return;
+            if (data.entries.length == 0) return;
 
             const text = DraftStore.getDraft(SelectedChannelStore.getChannelId(), 0);
             let urlsString = "\n";
 
-            if (text.length == 0 && urls.length == 1) {
-              urlsString = displayUri(urls[0]);
+            if (text.length == 0 && data.entries.length == 1) {
+              urlsString = displayUri(data.entries[0].url, data.entries[0].filename);
             } else {
-              for (const url of urls) {
-                urlsString += `[Attachment](${url})\n`;
+              for (const entry of data.entries) {
+                console.log(entry.filename, entry.url);
+                urlsString += `[${entry.filename}](${entry.url})\n`;
               }
             }
 
