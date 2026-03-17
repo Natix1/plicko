@@ -27,7 +27,7 @@ services:
     env_file:
       - path: .env
         required: false
-      - path: stack.env
+      - path: ../stack.env
         required: false
     environment:
       - POSTGRES_USER=postgres
