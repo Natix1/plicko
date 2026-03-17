@@ -18,7 +18,7 @@ export async function uploadFile(_, endpoint: string, plickoKey: string): Promis
     formData.append("files", fs.createReadStream(filePath), path.basename(filePath));
   }
 
-  const response = await axios.post(`${endpoint}/uploads`, formData, {
+  const response = await axios.post(`${endpoint}/v1/uploads`, formData, {
     headers: {
       ...formData.getHeaders(),
       "x-plicko-key": plickoKey,
@@ -29,7 +29,7 @@ export async function uploadFile(_, endpoint: string, plickoKey: string): Promis
 }
 
 export async function getStorageSize(endpoint: string, plickoKey: string): Promise<number> {
-  const response = await axios.get(`${endpoint}/metadata/storage-total`, {
+  const response = await axios.get(`${endpoint}/v1/metadata/storage-total`, {
     headers: {
       "x-plicko-key": plickoKey
     }
