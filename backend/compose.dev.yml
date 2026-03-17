@@ -1,0 +1,19 @@
+services:
+   postgres:
+      image: postgres
+      restart: no
+      env_file:
+        - path: .env
+          required: false
+        - path: stack.env
+          required: false
+      environment:
+        - POSTGRES_USER=postgres
+        - POSTGRES_DB=plicko
+      volumes:
+        - postgres_data:/var/lib/postgresql
+      ports:
+        - 5432:5432
+
+volumes:
+  postgres_data:

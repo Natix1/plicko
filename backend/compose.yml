@@ -1,6 +1,7 @@
 services:
   app-traefik:
     build: .
+    restart: unless-stopped
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.plicko.rule=Host(`${PLICKO_ENDPOINT_URL}`)"
@@ -11,6 +12,7 @@ services:
       - "traefik.http.services.plicko.loadbalancer.server.port=8080"
     networks:
       - proxy
+      - plicko
     env_file:
       - path: .env
         required: false
@@ -19,10 +21,27 @@ services:
         required: false
     volumes:
       - artifacts:/artifacts
+  postgres:
+    image: postgres
+    restart: unless-stopped
+    env_file:
+      - path: .env
+        required: false
+      - path: stack.env
+        required: false
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_DB=plicko
+    volumes:
+      - postgres_data:/var/lib/postgresql
+    networks:
+      - plicko
 
 networks:
   proxy:
     external: true
+  plicko:
 
 volumes:
   artifacts:
+  postgres_data:
