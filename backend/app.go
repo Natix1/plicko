@@ -47,7 +47,7 @@ func init() {
 
 func main() {
 	// public
-	http.HandleFunc("GET /uploads/{file}", ReadHandler)
+	http.HandleFunc("GET /artifacts/{file}", ReadHandler)
 	http.HandleFunc("GET /assets/{file}", AssetsHandler)
 
 	// private
