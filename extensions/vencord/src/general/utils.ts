@@ -1,11 +1,11 @@
-function humanBytes(bytes: number): string {
+export function humanBytes(bytes: number): string {
   if (bytes < 1024) return `${bytes} B`;
   if (bytes < 1024 ** 2) return `${(bytes / 1024).toFixed(1)} KB`;
   if (bytes < 1024 ** 3) return `${(bytes / 1024 ** 2).toFixed(1)} MB`;
   return `${(bytes / 1024 ** 3).toFixed(1)} GB`;
 }
 
-function displayUri(uri: string, fileName: string): string {
+export function displayUri(uri: string, fileName: string): string {
   if (uri.endsWith(".png") ||
     uri.endsWith(".jpg") ||
     uri.endsWith(".jpeg") ||

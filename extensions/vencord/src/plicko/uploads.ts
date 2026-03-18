@@ -4,6 +4,7 @@ import { ChannelStore, DraftStore, DraftType, SelectedChannelStore, showToast, T
 import { FilePayload, UploadResponse } from "../types";
 import { Native } from "./nativeBridge";
 import { settings } from "../settings";
+import { displayUri } from "../general/utils"
 
 const MEBIBYTE_BYTES = 2 ^ 20;
 
