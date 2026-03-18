@@ -54,7 +54,7 @@ func uploadFileBlob(id string, file *multipart.File) error {
 }
 
 func WriteHandler(w http.ResponseWriter, r *http.Request) {
-	r.Body = http.MaxBytesReader(w, r.Body, 500<<20)
+	r.Body = http.MaxBytesReader(w, r.Body, MAX_UPLOAD_SIZE_BYTES)
 	if err := r.ParseMultipartForm(500 << 20); err != nil {
 		HTTPError(w, http.StatusBadRequest, "failed to parse form: "+err.Error(), err)
 		return

@@ -4,12 +4,20 @@ services:
     restart: unless-stopped
     labels:
       - "traefik.enable=true"
+
+      - "traefik.http.middlewares.plicko-ratelimit.ratelimit.average=20"
+      - "traefik.http.middlewares.plicko-ratelimit.period=1s"
+      - "traefik.http.middlewares.plicko-ratelimit.burst=30"
+
+      - "traefik.http.middlewares.plicko-upload.maxRequestBodyBytes=${MAX_UPLOAD_SIZE_BYTES:-524288000}"
+
       - "traefik.http.routers.plicko.rule=Host(`${PLICKO_ENDPOINT_URL}`)"
       - "traefik.http.routers.plicko.entrypoints=websecure"
       - "traefik.http.routers.plicko.tls=true"
       - "traefik.http.routers.plicko.tls.certresolver=le"
       - "traefik.http.routers.plicko.service=plicko"
       - "traefik.http.services.plicko.loadbalancer.server.port=8080"
+      - "traefik.http.routers.plicko.middlewares=plicko-ratelimit,plicko-upload"
     networks:
       - proxy
       - plicko

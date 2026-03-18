@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"os"
+	"strconv"
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/joho/godotenv"
@@ -16,6 +17,7 @@ var (
 	BIND_ADDR                  string        = ""
 	ARTIFACTS_DIRECTORY        string        = ""
 	POSTGRES_CONNECTION_STRING string        = ""
+	MAX_UPLOAD_SIZE_BYTES      int64         = 0
 	POSTGRES                   *pgxpool.Pool = nil
 )
 
@@ -44,9 +46,17 @@ func init() {
 	PLICKO_KEY = getEnvSafe("PLICKO_KEY")
 	BIND_ADDR = getEnvSafe("BIND_ADDR")
 	POSTGRES_CONNECTION_STRING = getEnvSafe("POSTGRES_CONNECTION_STRING")
-
 	ARTIFACTS_DIRECTORY = getEnvDefault("ARTIFACTS_DIRECTORY", "/artifacts")
-	err := RunMigrations(POSTGRES_CONNECTION_STRING)
+
+	maxUploadSizeBytesStr := getEnvDefault("MAX_UPLOAD_SIZE_BYTES", "524288000") // default: 500 MiB
+	maxUploadSizeBytes, err := strconv.ParseInt(maxUploadSizeBytesStr, 10, 64)
+	if err != nil {
+		panic("Invalid value for MAX_UPLOAD_SIZE_BYTES: couldn't convert to int64")
+	}
+
+	MAX_UPLOAD_SIZE_BYTES = maxUploadSizeBytes
+
+	err = RunMigrations(POSTGRES_CONNECTION_STRING)
 	if err != nil {
 		panic("Failed running database migrations: " + err.Error())
 	}
