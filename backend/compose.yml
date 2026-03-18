@@ -9,7 +9,7 @@ services:
       - "traefik.http.middlewares.plicko-ratelimit.ratelimit.period=1s"
       - "traefik.http.middlewares.plicko-ratelimit.ratelimit.burst=30"
 
-      - "traefik.http.middlewares.plicko-upload.maxRequestBodyBytes=${MAX_UPLOAD_SIZE_BYTES:-524288000}"
+      - "traefik.http.middlewares.plicko-upload.buffering.maxRequestBodyBytes=${MAX_UPLOAD_SIZE_BYTES:-524288000}"
 
       - "traefik.http.routers.plicko.rule=Host(`${PLICKO_ENDPOINT_URL}`)"
       - "traefik.http.routers.plicko.entrypoints=websecure"
