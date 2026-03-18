@@ -2,9 +2,9 @@ import { ModalCloseButton, ModalContent, ModalFooter, ModalHeader, ModalRoot, op
 import { Paragraph } from "@components/Paragraph";
 import { Heading } from "@components/Heading";
 import { Button } from "@components/Button";
-import { PlickoConfirmModalProps, UploadProvider } from "./types";
+import { PlickoConfirmModalProps, UploadProvider } from "../types";
 
-function PlickoConfirmModal({ onDiscord, onPlicko, onDiscard, props }: PlickoConfirmModalProps) {
+function PlickoProviderChoice({ onDiscord, onPlicko, onDiscard, props }: PlickoConfirmModalProps) {
   return (
     <ModalRoot {...props}>
       <ModalHeader>
@@ -26,7 +26,7 @@ function PlickoConfirmModal({ onDiscord, onPlicko, onDiscard, props }: PlickoCon
   );
 }
 
-export function pickUploadProvider(): Promise<UploadProvider> {
+export function getProviderChoice(): Promise<UploadProvider> {
   return new Promise(resolve => {
     openModal(props => {
       const close = (provider: UploadProvider) => {
@@ -35,7 +35,7 @@ export function pickUploadProvider(): Promise<UploadProvider> {
       };
 
       return (
-        <PlickoConfirmModal
+        <PlickoProviderChoice
           props={props}
           onDiscord={() => close(UploadProvider.Discord)}
           onPlicko={() => close(UploadProvider.Plicko)}

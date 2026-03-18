@@ -29,5 +29,6 @@ export interface PlickoConfirmModalProps {
 export enum DragAndDropBehavior {
   AlwaysDiscord,
   AlwaysPlicko,
-  Choose
+  Choose,
+  Automatic
 }
