@@ -4,9 +4,9 @@ import { ChannelStore, DraftStore, DraftType, SelectedChannelStore, showToast, T
 import { FilePayload, UploadResponse } from "../types";
 import { Native } from "./nativeBridge";
 import { settings } from "../settings";
-import { displayUri } from "../general/utils"
+import { displayUri, humanBytes } from "../general/utils"
 
-const MEBIBYTE_BYTES = 2 ^ 20;
+const MEBIBYTE_BYTES = 2 ** 20;
 
 /*
 * Stores how much a user can upload in MiB
@@ -81,6 +81,8 @@ export function uploadFilesToDiscord(files: File[]) {
 export function getMaxUploadSizeForCurrentUser(): number {
   const currentUser = UserStore.getCurrentUser();
   const premiumType = currentUser.premiumType || 0;
+  const maxUploadSize = MAX_UPLOAD_SIZES[premiumType] || MAX_UPLOAD_SIZES[0];
 
-  return MAX_UPLOAD_SIZES[premiumType] || MAX_UPLOAD_SIZES[0];
+  console.log("Max upload size for the current user: ", maxUploadSize);
+  return maxUploadSize;
 }
