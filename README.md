@@ -5,7 +5,7 @@
 [Plicko Demo.webm](https://github.com/user-attachments/assets/2009f721-8036-4ab1-8f5b-79764d1226f0)
 </div>
 
-> Plicko lets you easily upload your files from discord up into your own cloud. There is no more need to go onto an online drive service just because Discord limits you to 8 megabytes without nitro.
+Plicko lets you easily upload your files from discord up into your own cloud. There is no more need to go onto an online drive service just because Discord limits you to 8 megabytes without nitro.
 
 > [!WARNING]
 > This is a project made for myself and I don't expect anyone else to use it. Although if you have any questions, please feel free to reach out.
