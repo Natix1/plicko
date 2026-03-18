@@ -1,7 +1,7 @@
 <div align="center">
 <img src="backend/assets/plicko.svg">
 
-### Because 8 megabytes were never enough
+### Because 10 megabytes were never enough
 [Plicko Demo.webm](https://github.com/user-attachments/assets/2009f721-8036-4ab1-8f5b-79764d1226f0)
 </div>
 
