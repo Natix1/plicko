@@ -28,11 +28,12 @@ This project is licensed under the GPLv3.
  - Command runner / macros: [Just](https://github.com/casey/just)
  
 ### Vencord Extension
-- Language: TypeScript
-- Package manager: PNPM
+- Language: [TypeScript](https://www.typescriptlang.org/)
+- Package manager: [PNPM](https://pnpm.io/)
 
 ### Backend
-- Language: Go
-- Database: PostgreSQL
-- Containerization: Docker & Docker Compose
-- Reverse proxy: Traefik (you must setup manually; the compose configuration just expects it to be there)
+- Language: [Go](https://go.dev]
+- Database: [PostgreSQL](https://www.postgresql.org/) (used for file metadata; not storing the actual contents)
+- File storage: Filesystem (although S3 bucket support could become a thing someday)
+- Containerization: [Docker](https://www.docker.com/) & [Docker Compose](https://docs.docker.com/compose/)
+- Reverse proxy: [Traefik](https://traefik.io/traefik) (you must install manually; the docker compose configuration just expects it to be there)
