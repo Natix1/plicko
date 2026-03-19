@@ -81,6 +81,7 @@ func main() {
 	http.HandleFunc("POST /v1/uploads", Auth(WriteHandler))
 	http.HandleFunc("GET /v1/metadata/storage-total", Auth(StorageTakenHandler))
 	http.HandleFunc("GET /v1/uploads", Auth(ListHandler))
+	http.HandleFunc("DELETE /v1/artifacts/{id}", Auth(DeleteHandler))
 
 	Logger.Info("Serving...")
 	http.ListenAndServe(BIND_ADDR, nil)
