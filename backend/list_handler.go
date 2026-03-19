@@ -24,10 +24,11 @@ func getArtifacts(limit int, after time.Time) ([]Artifact, error) {
 	rows, err := POSTGRES.Query(context.Background(),
 		`
 		SELECT * FROM uploads
-		WHERE
-		LIMIT $1
+		WHERE uploaded_at > $1
+		LIMIT $2
 		`,
-		limit)
+		after, limit)
+
 	if err != nil {
 		return []Artifact{}, err
 	}
@@ -51,8 +52,8 @@ func ListHandler(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if afterStr := r.URL.Query().Get("after"); afterStr != "" {
-		if after, err := strconv.Atoi(afterStr); err != nil {
-			afterTime = time.Unix(int64(after), 0)
+		if after, err := strconv.ParseInt(afterStr, 10, 64); err == nil {
+			afterTime = time.Unix(after, 0)
 		}
 	}
 
