@@ -80,6 +80,7 @@ func main() {
 	// private
 	http.HandleFunc("POST /v1/uploads", Auth(WriteHandler))
 	http.HandleFunc("GET /v1/metadata/storage-total", Auth(StorageTakenHandler))
+	http.HandleFunc("GET /v1/uploads", Auth(ListHandler))
 
 	Logger.Info("Serving...")
 	http.ListenAndServe(BIND_ADDR, nil)
