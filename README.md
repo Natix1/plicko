@@ -1,6 +1,9 @@
 <div align="center">
 <img src="backend/assets/plicko.svg">
 
+> [!WARNING]
+> This repository and all further updates are now located on [Codeberg](https://codeberg.org/nholisz/plicko)
+
 ### Because 10 megabytes were never enough
 [Plicko Demo.webm](https://github.com/user-attachments/assets/2009f721-8036-4ab1-8f5b-79764d1226f0)
 </div>
