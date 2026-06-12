@@ -1,5 +1,5 @@
 services:
-  app-traefik:
+  plicko:
     build: .
     container_name: plicko
     restart: unless-stopped
@@ -7,11 +7,7 @@ services:
       - proxy
       - plicko
     env_file:
-      - path: .env
-        required: false
-
-      - path: ../stack.env
-        required: false
+      - .env
     volumes:
       - artifacts:/artifacts
   postgres:
