@@ -9,7 +9,7 @@ impl IntoResponse for AppError {
     fn into_response(self) -> axum::response::Response {
         (
             StatusCode::INTERNAL_SERVER_ERROR,
-            format!("Something went wrong on our end. Sorry!"),
+            format!("Error: {}", self.0),
         )
             .into_response()
     }
