@@ -13,3 +13,4 @@ dev-restart: dev-down dev-up
 dev-sqlx-prepare:
     cargo sqlx migrate run
     cargo sqlx prepare
+

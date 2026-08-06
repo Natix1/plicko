@@ -1,0 +1,6 @@
+assets
+docker
+target
+.env
+.gitignore
+justfile
