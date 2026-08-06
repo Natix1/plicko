@@ -1,7 +1,7 @@
 import { NavContextMenuPatchCallback } from "@api/ContextMenu";
-import { tryUploadAndInsert } from "./uploads";
-import { Menu } from "@webpack/common";
 import { CloudUploadIcon } from "@components/index";
+import { Menu, React } from "@webpack/common";
+import { tryUploadAndInsert } from "./uploads";
 
 export const TextAreaContextPatch: NavContextMenuPatchCallback = (children, args) => {
   children.unshift(<Menu.MenuItem

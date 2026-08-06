@@ -1,0 +1,25 @@
+[package]
+name = "plicko-backend"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+anyhow = "1.0.104"
+axum = "0.8.9"
+chrono = { version = "0.4.45", features = ["serde"] }
+dotenvy = "0.15.7"
+envy = "0.4.2"
+serde = { version = "1.0.229", features = ["derive"] }
+tokio = { version = "1.53.1", features = ["full"] }
+tower-http = { version = "0.7.0", features = ["trace"] }
+tracing = "0.1.44"
+tracing-subscriber = { version = "0.3.23", features = ["env-filter"] }
+sqlx = { version = "0.8", features = [
+    "runtime-tokio",
+    "postgres",
+    "chrono",
+    "uuid",
+] }
+aws-config = "1.10.1"
+aws-sdk-s3 = "1.140.0"
+uuid = { version = "1.24.0", features = ["v7", "serde"] }

@@ -1,2 +1,2 @@
-.env
-artifacts
+target/
+.env*

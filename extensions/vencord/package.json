@@ -13,11 +13,14 @@
   "license": "ISC",
   "packageManager": "pnpm@10.27.0",
   "devDependencies": {
+    "@types/mime-types": "^3.0.1",
     "electron": "^41.0.2",
     "typescript": "^5.9.3"
   },
   "dependencies": {
+    "@types/react": "^19.2.18",
     "axios": "^1.13.6",
-    "form-data": "^4.0.5"
+    "form-data": "^4.0.5",
+    "mime-types": "^3.0.2"
   }
 }

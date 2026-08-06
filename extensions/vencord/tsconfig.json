@@ -1,7 +1,7 @@
 {
   "extends": "./Vencord/tsconfig.json",
   "compilerOptions": {
-    "baseUrl": "./Vencord/src"
+    "jsx": "react"
   },
   "include": [
     "src/**/*",

@@ -1,3 +1,16 @@
-setup:
-    go mod tidy
-    mkdir -p artifacts
+export DATABASE_URL := "postgresql://postgres:postgres@localhost:5432/plicko"
+
+dev-up:
+    docker compose -f docker/dev-compose.yml up -d
+
+dev-down:
+    docker compose -f docker/dev-compose.yml down
+
+dev-reset:
+    docker compose -f docker/dev-compose.yml down -v
+
+dev-restart: dev-down dev-up
+dev-sqlx-prepare:
+    cargo sqlx migrate run
+    cargo sqlx prepare
+

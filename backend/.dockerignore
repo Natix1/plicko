@@ -1,8 +1,6 @@
-.gitignore
+assets
+docker
+target
 .env
-.dockerignore
-.compose.yml
-Dockerfile
+.gitignore
 justfile
-.env.example
-uploads

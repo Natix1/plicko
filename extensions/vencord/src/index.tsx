@@ -31,8 +31,7 @@ export default definePlugin({
 
   interceptOnDrop(dataTransfer: DataTransfer) {
     const files: File[] = Array.from(dataTransfer.files);
-    this.handleDrop(files).catch((err) => {
-      let error = err as Error;
+    this.handleDrop(files).catch((error: Error) => {
       showToast(`Something went wrong while uploading: ${error.message}`, Toasts.Type.FAILURE);
       console.error("Handling drop failed:", error.cause);
     });
