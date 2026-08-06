@@ -27,68 +27,74 @@ pub async fn prune_invalid_entries_task(state: AppState) {
             continue;
         }
 
-        let deleted_ids: Vec<uuid::Uuid> = expired.iter().map(|v| v.id.clone()).collect();
-        let mut delete_aws_ids: Vec<ObjectIdentifier> = Vec::with_capacity(expired.len());
+        let expired_chunks = expired.chunks(1000);
+        let all_expired_ids: Vec<uuid::Uuid> = expired.iter().map(|v| v.id).collect();
 
-        for entry in expired {
-            let obj_id = match ObjectIdentifier::builder()
-                .key(&entry.s3_object_key)
+        for chunk in expired_chunks {
+            let mut aws_ids: Vec<ObjectIdentifier> = Vec::with_capacity(chunk.len());
+
+            for entry in chunk {
+                let obj_id = match ObjectIdentifier::builder()
+                    .key(&entry.s3_object_key)
+                    .build()
+                {
+                    Ok(v) => v,
+                    Err(e) => {
+                        tracing::error!(
+                            "Couldn't make object id out of key {} with ID {}: {}\nSkipping.",
+                            &entry.s3_object_key,
+                            &entry.id,
+                            &e
+                        );
+                        continue;
+                    }
+                };
+
+                aws_ids.push(obj_id);
+            }
+
+            let aws_delete_type = match aws_sdk_s3::types::Delete::builder()
+                .set_objects(Some(aws_ids))
                 .build()
             {
                 Ok(v) => v,
                 Err(e) => {
-                    tracing::error!(
-                        "Couldn't make object id out of key {} with ID {}: {}\nSkipping.",
-                        &entry.s3_object_key,
-                        &entry.id,
-                        &e
-                    );
+                    tracing::error!("Couldn't make delete type: {}", e);
                     continue;
                 }
             };
 
-            delete_aws_ids.push(obj_id);
+            let response = match state
+                .s3
+                .delete_objects()
+                .bucket(&state.config.s3_bucket_name)
+                .delete(aws_delete_type)
+                .send()
+                .await
+            {
+                Ok(v) => v,
+                Err(e) => {
+                    tracing::error!("Couldn't delete objects: {}", e);
+                    continue;
+                }
+            };
+
+            tracing::info!(
+                "Deleted {} expired objects from S3",
+                response.deleted().len()
+            );
         }
 
-        let delete_type = match aws_sdk_s3::types::Delete::builder()
-            .set_objects(Some(delete_aws_ids))
-            .build()
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!("Couldn't make delete type: {}", e);
-                continue;
-            }
-        };
+        tracing::info!("Deleting expired entries from postgres...");
 
-        let response = match state
-            .s3
-            .delete_objects()
-            .bucket(&state.config.s3_bucket_name)
-            .delete(delete_type)
-            .send()
-            .await
-        {
-            Ok(v) => v,
-            Err(e) => {
-                tracing::error!("Couldn't delete objects: {}", e);
-                continue;
-            }
-        };
-
-        tracing::info!(
-            "Deleted {} expired objects from S3, moving onto postgres...",
-            response.deleted().len()
-        );
-
-        match sqlx::query!("DELETE FROM uploads WHERE id = ANY($1)", &deleted_ids)
+        match sqlx::query!("DELETE FROM uploads WHERE id = ANY($1)", &all_expired_ids)
             .execute(&state.db)
             .await
         {
             Ok(_) => {
                 tracing::info!(
                     "Deleted {} expired objects from postgres",
-                    &deleted_ids.len()
+                    &all_expired_ids.len()
                 )
             }
             Err(e) => {
@@ -99,7 +105,7 @@ pub async fn prune_invalid_entries_task(state: AppState) {
 
         tracing::info!(
             "All done, purged {} expired objects in total",
-            &deleted_ids.len()
+            &all_expired_ids.len()
         );
     }
 }
