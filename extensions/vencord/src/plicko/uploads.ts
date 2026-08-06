@@ -86,12 +86,17 @@ export async function tryUploadAndInsert() {
 }
 
 export async function uploadFilesToPlicko(files: File[]) {
-  const result = await Native.uploadFiles(
-    settings.store.endpoint,
-    settings.store.plickoKey,
-    await filesToFilePayloads(files),
-  );
-  handleUploadResponse(result);
+  try {
+    const result = await Native.uploadFiles(
+      settings.store.endpoint,
+      settings.store.plickoKey,
+      await filesToFilePayloads(files),
+    );
+    handleUploadResponse(result);
+  } catch (e) {
+    console.error(`Failed uploading files to plicko: ${e}`);
+    throw e;
+  }
 }
 
 export function uploadFilesToDiscord(files: File[]) {
