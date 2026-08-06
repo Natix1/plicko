@@ -1,8 +1,0 @@
-.gitignore
-.env
-.dockerignore
-.compose.yml
-Dockerfile
-justfile
-.env.example
-uploads
