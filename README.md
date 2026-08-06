@@ -18,7 +18,7 @@ Currently, plicko supports three ways to upload a file conveniently from the dis
 
 - "+" button in the message bar
 - Right-clicking on the message bar
-- Drap-and-drop (although not sure how long this will work before an update breaks it)
+- Drap-and-drop
 
 # License
 
