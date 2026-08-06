@@ -1,3 +1,3 @@
-pub mod appconfig;
-pub mod apperror;
-pub mod appstate;
+pub mod app_config;
+pub mod app_error;
+pub mod app_state;

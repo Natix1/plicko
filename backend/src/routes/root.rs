@@ -2,7 +2,7 @@ use axum::Json;
 use chrono::Local;
 use serde::Serialize;
 
-use crate::state::apperror::AppError;
+use crate::state::app_error::AppError;
 #[derive(Serialize)]
 pub struct RootHandlerResponse {
     success: bool,
