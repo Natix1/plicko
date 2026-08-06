@@ -3,7 +3,7 @@ import { dialog } from "electron";
 import * as fs from "fs";
 import mime from "mime-types";
 import path from "path";
-import { FileEntry, FilePayload } from "./types";
+import { FileEntry, FilePayload, UploadFilesResponse } from "./types";
 
 async function uploadFile(
   endpoint: string,
@@ -58,12 +58,13 @@ export async function uploadFiles(
   endpoint: string,
   plickoKey: string,
   files: FilePayload[],
-): Promise<FileEntry[]> {
+): Promise<UploadFilesResponse> {
   const uploadPromises = files.map((file) =>
     uploadFile(endpoint, plickoKey, file),
   );
   const results = await Promise.allSettled(uploadPromises);
   const publicUris: Map<string, string> = new Map();
+  const errors: Map<string, string> = new Map();
 
   results.forEach((res, idx) => {
     if (res.status == "fulfilled") {
@@ -72,28 +73,33 @@ export async function uploadFiles(
       console.error(
         `Upload failed for file #${idx} (${files[idx].name}): ${res.reason}`,
       );
+      errors.set(files[idx].name, `${res.reason}`);
     }
   });
 
-  const entries: FileEntry[] = [];
+  const entries: Map<string, FileEntry | null> = new Map();
+
   for (const [filename, uri] of publicUris.entries()) {
-    entries.push({ filename, url: uri });
+    entries.set(filename, { filename, url: uri });
   }
 
-  return entries;
+  return {
+    entries: entries,
+    errors: errors,
+  };
 }
 
 export async function pickAndUploadFiles(
   _: unknown,
   endpoint: string,
   plickoKey: string,
-): Promise<FileEntry[]> {
+): Promise<UploadFilesResponse> {
   const result = await dialog.showOpenDialog({
     properties: ["openFile", "multiSelections"],
     filters: [{ name: "All Files", extensions: ["*"] }],
   });
 
-  if (result.canceled) return [];
+  if (result.canceled) return { errors: new Map(), entries: new Map() };
   if (result.filePaths.length > 5)
     throw new Error("I don't think you want to upload that many files");
 
@@ -110,8 +116,8 @@ export async function pickAndUploadFiles(
   }
 
   try {
-    const entries = await uploadFiles(null, endpoint, plickoKey, files);
-    return entries;
+    const response = await uploadFiles(null, endpoint, plickoKey, files);
+    return response;
   } catch (e) {
     console.error(`Failed to upload files: ${e}`);
     throw new Error(`Failed to upload files: ${e}`);

@@ -28,3 +28,8 @@ export enum DragAndDropBehavior {
   Choose,
   Automatic,
 }
+
+export interface UploadFilesResponse {
+  errors: Map<string, string>;
+  entries: Map<string, FileEntry | null>;
+}

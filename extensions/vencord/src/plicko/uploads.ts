@@ -11,7 +11,7 @@ import {
 } from "@webpack/common";
 import { displayUri } from "../general/utils";
 import { settings } from "../settings";
-import { FileEntry, FilePayload } from "../types";
+import { FilePayload, UploadFilesResponse } from "../types";
 import { Native } from "./nativeBridge";
 
 const MEBIBYTE_BYTES = 2 ** 20;
@@ -29,16 +29,30 @@ const MAX_UPLOAD_SIZES = {
   3: MEBIBYTE_BYTES * 50, // Nitro basic
 };
 
-export function handleUploadResponse(entries: FileEntry[]) {
-  if (entries.length == 0) return;
+export function handleUploadResponse(response: UploadFilesResponse) {
+  if (response.entries.size == 0 && response.errors.size == 0) return;
+  for (const [filename, error] of response.errors.entries()) {
+    const errMsg = `Failed uploading file ${filename}: ${error}`;
+    console.error(errMsg);
+    showToast(errMsg, "failure");
+  }
+
+  if (response.entries.size == 0 && response.errors.size > 0) {
+    return;
+  }
 
   const text = DraftStore.getDraft(SelectedChannelStore.getChannelId(), 0);
   let urlsString = "\n";
 
-  if (text.length == 0 && entries.length == 1) {
-    urlsString = displayUri(entries[0].url, entries[0].filename);
+  if (text.length == 0 && response.entries.size == 1) {
+    urlsString = displayUri(
+      response.entries[0].url,
+      response.entries[0].filename,
+    );
   } else {
-    for (const entry of entries) {
+    for (const entry of response.entries.values()) {
+      if (entry === null) continue;
+
       console.log(entry.filename, entry.url);
       urlsString += `[${entry.filename}](${entry.url})\n`;
     }
