@@ -1,6 +1,3 @@
-> [!WARNING]
-> This repository and all further updates are now located on [Codeberg](https://codeberg.org/nholisz/plicko)
-
 <div align="center">
 <img src="backend/assets/plicko.svg">
 
