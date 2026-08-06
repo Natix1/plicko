@@ -19,7 +19,7 @@ pub struct PresignFile {
 #[derive(Serialize)]
 pub struct PresignFileResponse {
     pub url: String,
-    pub object_key: String,
+    pub s3_object_key: String,
     pub include_headers: HashMap<String, String>,
 }
 
@@ -57,6 +57,6 @@ pub async fn presign(
     Ok(Json(PresignFileResponse {
         url: presigned_req.uri().into(),
         include_headers: headers,
-        object_key,
+        s3_object_key: object_key,
     }))
 }
