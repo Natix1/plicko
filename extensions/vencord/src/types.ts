@@ -1,22 +1,18 @@
-export interface Entry {
-  url: string
-  filename: string
-}
-
-export interface UploadResponse {
-  entries: Entry[],
-  new_storage_size_bytes: number
+export interface FileEntry {
+  url: string;
+  filename: string;
 }
 
 export interface FilePayload {
   name: string;
+  contentType: string;
   buffer: Uint8Array;
 }
 
 export enum UploadProvider {
   Discord,
   Plicko,
-  None
+  None,
 }
 
 export interface PlickoConfirmModalProps {
@@ -30,5 +26,5 @@ export enum DragAndDropBehavior {
   AlwaysDiscord,
   AlwaysPlicko,
   Choose,
-  Automatic
+  Automatic,
 }
