@@ -3,6 +3,7 @@ use axum::extract::State;
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
 
+use crate::database::upload_record::UploadRecord;
 use crate::state::app_error::AppError;
 use crate::state::app_state::AppState;
 
@@ -14,16 +15,6 @@ pub struct ConfirmFile {
 #[derive(Serialize)]
 pub struct ConfirmFileResponse {
     pub public_uri: String,
-}
-
-#[derive(Debug, sqlx::FromRow, serde::Serialize)]
-pub struct UploadRecord {
-    id: uuid::Uuid,
-    filename: String,
-    content_type: String,
-    size_bytes: i64,
-    s3_object_key: String,
-    expires_at: chrono::DateTime<Utc>,
 }
 
 pub async fn confirm(

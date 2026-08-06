@@ -1,7 +1,6 @@
-use std::sync::Arc;
-
 use axum::routing::{get, post};
 use axum::{Router, middleware};
+use plicko_backend::database::prune_task;
 use plicko_backend::middleware::plicko_auth;
 use plicko_backend::routes::root;
 use plicko_backend::routes::uploads::{confirm, presign};
@@ -42,6 +41,9 @@ async fn main() -> Result<(), AppError> {
         .layer(TraceLayer::new_for_http())
         .with_state(app_state.clone())
         .route("/", get(root::root));
+
+    tracing::info!("Staring prune task");
+    tokio::spawn(prune_task::prune_invalid_entries_task(app_state.clone()));
 
     tracing::info!("Provisioning listener on port {}", bind_address);
     let listener = tokio::net::TcpListener::bind(bind_address).await?;
