@@ -3,6 +3,7 @@ name = "plicko-backend"
 description = "Backend for plicko: https://github.com/nholisz/plicko"
 license = "GPL-3.0-or-later"
 license-file = "../LICENSE"
+publish = false
 repository = "https://github.com/nholisz/plicko"
 version = "1.0.0"
 edition = "2024"
