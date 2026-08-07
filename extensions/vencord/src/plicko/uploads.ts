@@ -45,10 +45,15 @@ export function handleUploadResponse(response: UploadFilesResponse) {
   let urlsString = "\n";
 
   if (text.length == 0 && response.entries.size == 1) {
-    urlsString = displayUri(
-      response.entries[0].url,
-      response.entries[0].filename,
-    );
+    const [filename, entry] = Array.from(response.entries)[0];
+    if (entry == null) {
+      const errMsg = `Failed uploading file ${filename}, server returned nothing`;
+      console.error(errMsg);
+      showToast(errMsg, "failure");
+      return;
+    }
+
+    urlsString = displayUri(entry.url, entry.filename);
   } else {
     for (const entry of response.entries.values()) {
       if (entry === null) continue;
