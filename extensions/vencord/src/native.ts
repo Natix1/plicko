@@ -1,9 +1,43 @@
 import axios from "axios";
 import { dialog } from "electron";
-import * as fs from "fs";
+import ExifTransformer from "exif-be-gone";
 import mime from "mime-types";
+import * as fs from "node:fs/promises";
+import { Readable } from "node:stream";
 import path from "path";
 import { FileEntry, FilePayload, UploadFilesResponse } from "./types";
+
+async function generateCleanPayload(file: FilePayload): Promise<FilePayload> {
+  const supportedContentTypes = [
+    "image/jpeg",
+    "image/png",
+    "image/webp",
+    "image/gif",
+    "image/tiff",
+    "image/heic",
+    "image/heif",
+    "image/avif",
+    "image/jxl",
+    "application/pdf",
+  ];
+
+  if (!supportedContentTypes.includes(file.contentType)) {
+    return file;
+  }
+
+  const cleanStream = Readable.from(file.buffer).pipe(new ExifTransformer());
+  const chunks: Buffer[] = [];
+
+  for await (const chunk of cleanStream) {
+    chunks.push(Buffer.from(chunk));
+  }
+
+  return {
+    name: file.name,
+    contentType: file.contentType,
+    buffer: Buffer.concat(chunks),
+  };
+}
 
 async function uploadFile(
   endpoint: string,
@@ -57,9 +91,12 @@ export async function uploadFiles(
   _: unknown,
   endpoint: string,
   plickoKey: string,
-  files: FilePayload[],
+  rawFiles: FilePayload[],
 ): Promise<UploadFilesResponse> {
-  const uploadPromises = files.map((file) =>
+  const cleanFiles = await Promise.all(
+    rawFiles.map((f) => generateCleanPayload(f)),
+  );
+  const uploadPromises = cleanFiles.map((file) =>
     uploadFile(endpoint, plickoKey, file),
   );
   const results = await Promise.allSettled(uploadPromises);
@@ -68,12 +105,12 @@ export async function uploadFiles(
 
   results.forEach((res, idx) => {
     if (res.status == "fulfilled") {
-      publicUris.set(files[idx].name, res.value);
+      publicUris.set(cleanFiles[idx].name, res.value);
     } else {
       console.error(
-        `Upload failed for file #${idx} (${files[idx].name}): ${res.reason}`,
+        `Upload failed for file #${idx} (${cleanFiles[idx].name}): ${res.reason}`,
       );
-      errors.set(files[idx].name, `${res.reason}`);
+      errors.set(cleanFiles[idx].name, `${res.reason}`);
     }
   });
 
@@ -105,13 +142,13 @@ export async function pickAndUploadFiles(
 
   const files: FilePayload[] = [];
   for (const filePath of result.filePaths) {
-    const file = await fs.promises.readFile(filePath);
+    const rawBytes = await fs.readFile(filePath);
     const contentType = mime.lookup(filePath) || "application/octet-stream";
 
     files.push({
       name: path.basename(filePath),
       contentType: contentType,
-      buffer: file,
+      buffer: rawBytes,
     });
   }
 
