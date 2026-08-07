@@ -5,7 +5,7 @@ license = "GPL-3.0-or-later"
 license-file = "../LICENSE"
 publish = false
 repository = "https://github.com/nholisz/plicko"
-version = "1.0.0"
+version = "1.0.1"
 edition = "2024"
 
 [package.metadata.release]
