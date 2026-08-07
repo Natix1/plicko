@@ -3,6 +3,7 @@ use axum::{Router, middleware};
 use plicko_backend::database::prune_task;
 use plicko_backend::middleware::plicko_auth;
 use plicko_backend::routes::root;
+use plicko_backend::routes::stats::total_size;
 use plicko_backend::routes::uploads::{confirm, presign};
 use plicko_backend::state::app_config::AppConfig;
 use plicko_backend::state::app_error::AppError;
@@ -31,6 +32,7 @@ async fn main() -> Result<(), AppError> {
     let protected_routes = Router::new()
         .route("/v1/uploads/presign", post(presign::presign))
         .route("/v1/uploads/confirm", post(confirm::confirm))
+        .route("/v1/stats/total-size", get(total_size::total_size))
         .route_layer(middleware::from_fn_with_state(
             app_state.clone(),
             plicko_auth::auth,

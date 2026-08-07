@@ -19,6 +19,7 @@ sqlx = { version = "0.8", features = [
     "postgres",
     "chrono",
     "uuid",
+    "bigdecimal",
 ] }
 aws-config = "1.10.1"
 aws-sdk-s3 = "1.140.0"
