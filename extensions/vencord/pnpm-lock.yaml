@@ -14,6 +14,9 @@ importers:
       axios:
         specifier: ^1.13.6
         version: 1.13.6
+      exif-be-gone:
+        specifier: ^1.5.1
+        version: 1.5.1
       form-data:
         specifier: ^4.0.5
         version: 4.0.5
@@ -174,6 +177,10 @@ packages:
   escape-string-regexp@4.0.0:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
+
+  exif-be-gone@1.5.1:
+    resolution: {integrity: sha512-+fV9PoomNVR5Hmp0n1c0ZVl78/GaFrpnC0t7q4F9Aey8NcL+7Lutcez8KY2Ni30NWpvgLXawqiRFFwtdo4QgFg==}
+    hasBin: true
 
   extract-zip@2.0.1:
     resolution: {integrity: sha512-GDhU9ntwuKyGXdZBUgTIe+vXnWj0fppUEtMDL0+idd5Sta8TGpHssn/eusA9mrPr9qNDym6SxAYZjNvCn/9RBg==}
@@ -559,6 +566,8 @@ snapshots:
 
   escape-string-regexp@4.0.0:
     optional: true
+
+  exif-be-gone@1.5.1: {}
 
   extract-zip@2.0.1:
     dependencies:
