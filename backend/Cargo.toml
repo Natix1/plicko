@@ -8,6 +8,11 @@ repository = "https://github.com/nholisz/plicko"
 version = "1.0.0"
 edition = "2024"
 
+[package.metadata.release]
+publish = false
+tag-name = "v{{version}}"
+tag-prefix = ""
+
 [dependencies]
 anyhow = "1.0.104"
 axum = "0.8.9"
