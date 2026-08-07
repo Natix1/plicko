@@ -29,7 +29,7 @@ jobs:
         id: metadata
         uses: docker/metadata-action@v6
         with:
-          images: ghcr.io/plicko/plicko
+          images: ghcr.io/${{github.repository}}/plicko
           tags: |
             type=ref,event=branch
             type=ref,event=pr
