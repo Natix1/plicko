@@ -1,6 +1,7 @@
 use axum::Json;
 use chrono::Local;
 use serde::Serialize;
+use tracing::instrument;
 
 use crate::state::app_error::AppError;
 #[derive(Serialize)]
@@ -9,6 +10,7 @@ pub struct RootHandlerResponse {
     message: String,
 }
 
+#[instrument(name = "/")]
 pub async fn root() -> Result<Json<RootHandlerResponse>, AppError> {
     let now = Local::now();
     let formatted = now.to_rfc3339();

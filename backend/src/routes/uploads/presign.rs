@@ -5,24 +5,26 @@ use aws_sdk_s3::presigning::PresigningConfig;
 use axum::Json;
 use axum::extract::State;
 use serde::{Deserialize, Serialize};
+use tracing::instrument;
 
 use crate::state::app_error::AppError;
 use crate::state::app_state::AppState;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct PresignFile {
     pub filename: String,
     pub content_type: String,
     pub size_bytes: u64,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct PresignFileResponse {
     pub url: String,
     pub s3_object_key: String,
     pub include_headers: HashMap<String, String>,
 }
 
+#[instrument(name = "v1/uploads/presign", skip(state))]
 pub async fn presign(
     State(state): State<AppState>,
     Json(payload): Json<PresignFile>,

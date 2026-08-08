@@ -2,21 +2,23 @@ use axum::Json;
 use axum::extract::State;
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
+use tracing::instrument;
 
 use crate::database::upload_record::UploadRecord;
 use crate::state::app_error::AppError;
 use crate::state::app_state::AppState;
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct ConfirmFile {
     pub s3_object_key: String,
 }
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct ConfirmFileResponse {
     pub public_uri: String,
 }
 
+#[instrument(name = "v1/uploads/confirm", skip(state))]
 pub async fn confirm(
     State(state): State<AppState>,
     Json(payload): Json<ConfirmFile>,

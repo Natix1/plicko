@@ -1,22 +1,24 @@
 use axum::Json;
 use axum::extract::{Query, State};
 use serde::{Deserialize, Serialize};
+use tracing::instrument;
 
 use crate::database::upload_record::UploadRecord;
 use crate::state::app_error::AppError;
 use crate::state::app_state::AppState;
 
-#[derive(Serialize)]
+#[derive(Serialize, Debug)]
 pub struct ListResponse {
     pub uploads: Vec<UploadRecord>,
 }
 
-#[derive(Deserialize)]
+#[derive(Deserialize, Debug)]
 pub struct ListParams {
     after: Option<uuid::Uuid>,
     limit: u32,
 }
 
+#[instrument(name = "v1/uploads/list", skip(state))]
 pub async fn list(
     State(state): State<AppState>,
     query: Query<ListParams>,
@@ -39,8 +41,6 @@ pub async fn list(
     )
     .fetch_all(&state.db)
     .await?;
-
-    tracing::info!("Results: {:?}", results);
 
     Ok(Json(ListResponse { uploads: results }))
 }
