@@ -1,3 +1,5 @@
+use crate::state::app_config::AppConfig;
+use crate::state::app_error::AppError;
 use anyhow::anyhow;
 use aws_config::{BehaviorVersion, Region};
 use aws_sdk_s3::Client;
@@ -5,9 +7,6 @@ use aws_sdk_s3::config::Credentials;
 use aws_sdk_s3::error::SdkError;
 use sqlx::PgPool;
 use sqlx::postgres::PgPoolOptions;
-
-use crate::state::app_config::AppConfig;
-use crate::state::app_error::AppError;
 
 #[derive(Clone)]
 pub struct AppState {

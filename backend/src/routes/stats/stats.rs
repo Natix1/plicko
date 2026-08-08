@@ -5,14 +5,12 @@ use serde::Serialize;
 use crate::state::app_error::AppError;
 use crate::state::app_state::AppState;
 
-#[derive(Serialize)]
-pub struct TotalSizeResponse {
+#[derive(Serialize, Clone)]
+pub struct StatsResponse {
     total_size_bytes: u64,
 }
 
-pub async fn total_size(
-    State(state): State<AppState>,
-) -> Result<Json<TotalSizeResponse>, AppError> {
+pub async fn stats(State(state): State<AppState>) -> Result<Json<StatsResponse>, AppError> {
     let size: Option<i64> =
         sqlx::query_scalar!("SELECT SUM(size_bytes)::BIGINT FROM uploads WHERE expires_at > NOW()")
             .fetch_one(&state.db)
@@ -23,11 +21,11 @@ pub async fn total_size(
             .try_into()
             .map_err(|_| anyhow::anyhow!("Failed mapping size to u64"))?;
 
-        Ok(Json(TotalSizeResponse {
+        Ok(Json(StatsResponse {
             total_size_bytes: size_u64,
         }))
     } else {
-        Ok(Json(TotalSizeResponse {
+        Ok(Json(StatsResponse {
             total_size_bytes: 0,
         }))
     }
