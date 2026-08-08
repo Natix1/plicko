@@ -8,7 +8,7 @@ use aws_sdk_s3::error::SdkError;
 use sqlx::PgPool;
 use sqlx::postgres::PgPoolOptions;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct AppState {
     pub config: AppConfig,
     pub db: PgPool,
