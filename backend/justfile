@@ -14,3 +14,5 @@ dev-sqlx-prepare:
     cargo sqlx migrate run
     cargo sqlx prepare
 
+dev-psql:
+    docker compose -f docker/dev-compose.yml exec postgres psql -U postgres -d plicko
